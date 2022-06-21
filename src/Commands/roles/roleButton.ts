@@ -1,42 +1,58 @@
 import { MessageEmbed, MessageActionRow, MessageButton } from "discord.js";
 import { Command } from "../../structures/Command";
+import Role from "../../schemas/role-schema";
 
 export default new Command({
     name: "roles",
     description: "Sends an embed to get roles",
 
     run: async ({ interaction }) => {
-        const roleIds = [
-            // grab 5 role ids from the database and put them here
-            // => later have to create another row for every 5 roles
+        const roleArr = [];
 
-            // just some random roles to test with
-            "988532629806665740",
-            "988532611569844235"
-        ];
+        const roles = await Role.find({ serverId: interaction.guildId });
+
+        roles.forEach(obj => {
+            roleArr.push(obj.roles);
+        });
         
-        const embed = new MessageEmbed()
+        const successEmbed = new MessageEmbed()
         .setColor("#635291")
         .setTimestamp()
         .addFields([
             {
-                name: "Roles",
+                name: "Roles 📃",
                 value: "Click the buttons below to obtain roles",
+                inline: true,
+            }
+        ]);
+
+        const errorEmbed = new MessageEmbed()
+        .setColor("#635291")
+        .setTimestamp()
+        .addFields([
+            {
+                name: "Error ❌",
+                value: "No roles found in the database, start by adding some with `/setrole`",
                 inline: true,
             }
         ]);
 
         const row = new MessageActionRow();
 
-        roleIds.forEach(role => {
+        roleArr.forEach(async role => {
+
             row.addComponents(
                 new MessageButton()
-                .setCustomId(role)
-                .setLabel(interaction.guild.roles.cache.get(role).name)
-                .setStyle("PRIMARY")
+                .setCustomId(role.roleId)
+                .setLabel(interaction.guild.roles.cache.get(role.roleId).name)
+                .setStyle(parseInt(role.btnColor))
             );
         });
 
-        interaction.followUp({ embeds: [embed], components: [row]})
+        if (roleArr.length === 0) {
+            interaction.followUp({ embeds: [errorEmbed] });
+        } else {
+            interaction.followUp({ embeds: [successEmbed], components: [row] });
+        };
     }
 });

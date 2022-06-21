@@ -19,3 +19,4 @@ export const ErrorEmbed = errorEmbed;
 client.start();
 
 // help, i don't know how to add options to slash commands .-.
+// nvmd i found out, just needed an array instead of an object for the options

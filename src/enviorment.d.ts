@@ -4,6 +4,7 @@ declare global {
             botToken: string;
             botId: string;
             guildId: string;
+            mongodbUri: string;
             enviorment: "dev" | "prod" | "debug";
         }
     }
