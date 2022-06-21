@@ -3,7 +3,7 @@ import { Command } from "../../structures/Command";
 
 export default new Command({
     name: "ping",
-    description: "displays the bot's latency",
+    description: "Displays the bot's latency",
     run: async ({ interaction }) => {
         interaction.followUp({ embeds: [
             new MessageEmbed()
