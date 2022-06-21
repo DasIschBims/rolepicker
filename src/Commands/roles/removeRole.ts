@@ -21,7 +21,6 @@ export default new Command({
         const selectedRole = interaction.options.getRole("role").id;
 
         const roleIds = await Role.find({ serverId: interaction.guildId });
-        console.log(roleIds);
 
         roleIds.forEach(obj => {
             roleArray.push(obj.roles);
